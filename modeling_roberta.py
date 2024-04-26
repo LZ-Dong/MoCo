@@ -52,9 +52,7 @@ class RobertaClassificationHead(nn.Module):
         x = self.out_proj(x)
         return x
 
-class RobertaForGraphBasedSequenceClassification(
-    BertPreTrainedModel
-): 
+class RobertaForGraphBasedSequenceClassification(RobertaPreTrainedModel): 
     def __init__(self, config):
         config.output_hidden_states = True
         config.output_attentions = True
@@ -62,9 +60,10 @@ class RobertaForGraphBasedSequenceClassification(
         super(RobertaForGraphBasedSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.classifier = RobertaClassificationHead(config, graph_node_size=None)
-        self.graph_aggregation = GCNGraphAgg(
-            config.hidden_size, self.node_size, self.max_sentence_size
-        )
+        self.roberta = RobertaModel(config)
+
+        # Initialize weights and apply final processing
+        self.post_init()
 
     def forward(
         self,
@@ -81,6 +80,7 @@ class RobertaForGraphBasedSequenceClassification(
         sen2node=None,
         sentence_mask=None,
         sentence_length=None,
+        batch_id=None
     ):
         outputs = self.roberta(
             input_ids,
@@ -91,21 +91,8 @@ class RobertaForGraphBasedSequenceClassification(
             inputs_embeds=inputs_embeds,
         )
         sequence_output = outputs[0][:, 0, :]
-        
-        hidden_states = outputs[2][0]
 
-        graph_rep = self.graph_aggregation(
-            hidden_states,
-            nodes_index_mask,
-            adj_metric,
-            node_mask,
-            sen2node,
-            sentence_mask,
-            sentence_length,
-        )
-        whole_rep = torch.cat([sequence_output, graph_rep], dim=-1)
-
-        logits = self.classifier(whole_rep, dim=-1)
+        logits = self.classifier(sequence_output, dim=-1)
 
         outputs = (logits,) + outputs[2:]
         if labels is not None:
@@ -118,7 +105,7 @@ class RobertaForGraphBasedSequenceClassification(
 
             outputs = (loss,) + outputs
 
-        return outputs, whole_rep  
+        return outputs, sequence_output
 
 class RobertaForGraphBasedSequenceClassification_CL(BertPreTrainedModel):
     def __init__(self, config):
@@ -303,6 +290,9 @@ class RobertaForGraphBasedSequenceClassification_RFCL(RobertaPreTrainedModel):
             self.attention_maxscore,
             self.relation_num,
         )
+
+        # Initialize weights and apply final processing
+        self.post_init()
 
     def forward(
         self,

@@ -213,17 +213,17 @@ def glue_convert_examples_to_features(
         else:
             raise KeyError(output_mode)
 
-        if ex_index < 5:
-            logger.info("*** Example ***")
-            logger.info("guid: %s" % (example.guid))
-            logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-            logger.info(
-                "attention_mask: %s" % " ".join([str(x) for x in attention_mask])
-            )
-            logger.info(
-                "token_type_ids: %s" % " ".join([str(x) for x in token_type_ids])
-            )
-            logger.info("label: %s (id = %d)" % (example.label, label))
+        # if ex_index < 5:
+        #     logger.info("*** Example ***")
+        #     logger.info("guid: %s" % (example.guid))
+        #     logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+        #     logger.info(
+        #         "attention_mask: %s" % " ".join([str(x) for x in attention_mask])
+        #     )
+        #     logger.info(
+        #         "token_type_ids: %s" % " ".join([str(x) for x in token_type_ids])
+        #     )
+        #     logger.info("label: %s (id = %d)" % (example.label, label))
 
         features.append(
             InputFeatures(

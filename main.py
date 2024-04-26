@@ -294,7 +294,8 @@ def train(args, train_dataset, model, tokenizer):
                             logs[eval_key] = value
 
                     loss_scalar = (tr_loss - logging_loss) / args.logging_steps
-                    learning_rate_scalar = scheduler.get_lr()[0]
+                    # learning_rate_scalar = scheduler.get_lr()[0]
+                    learning_rate_scalar = scheduler.get_last_lr()[0]
                     logs["learning_rate"] = learning_rate_scalar
                     logs["loss"] = loss_scalar
                     logging_loss = tr_loss
@@ -815,8 +816,8 @@ def run(conf, data_dir=None):
     return res
 
 if __name__ == "__main__":
-    data_dir = os.path.abspath("data_GPT2")
-    for seed in [66]:  # Can list any random seeds here
+    data_dir = os.path.abspath(args.data_dir)
+    for seed in [10]:  # Can list any random seeds here
         config = {
             "seed": seed,
         }

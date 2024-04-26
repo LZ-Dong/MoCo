@@ -185,7 +185,7 @@ if __name__ == "__main__":
     tokenizer = RobertaTokenizer.from_pretrained("roberta-base", do_lower_case=False)
     max_seq_length = 512
     no_node = 0
-    spacy.prefer_gpu(3)
+    spacy.prefer_gpu(1)
     nlp = spacy.load("en_coreference_web_trf")
     with open(args.output_dir, "w", encoding="utf8") as outf:
         for idx, line in tqdm(enumerate(data)):
