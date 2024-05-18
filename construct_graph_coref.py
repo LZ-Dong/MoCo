@@ -161,22 +161,21 @@ def generate_rep_mask_based_on_graph(ent_nodes, sens, tokenizer):
     return ent_nodes, all_tokens, drop_nodes, sen_idx_pair
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--raw_dir",
-    type=str,
-    required=True,
-    help="The path of the input dataset.",
-)
-parser.add_argument(
-    "--output_dir",
-    type=str,
-    default="",
-    help="The path to the output dataset with graph.",
-)
-args = parser.parse_args()
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--raw_dir",
+        type=str,
+        required=True,
+        help="The path of the input dataset.",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="",
+        help="The path to the output dataset with graph.",
+    )
+    args = parser.parse_args()
     if args.output_dir == "":
         args.output_dir = args.raw_dir.replace(".jsonl", "_coref.jsonl")
     print("Loading Dataset ...")

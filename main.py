@@ -567,15 +567,15 @@ def load_and_cache_examples(
     return dataset
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--data_dir", default=os.path.join(os.getcwd(), "data"), type=str, help="The input data dir.")
+parser.add_argument("--data_dir", default=os.path.join(os.getcwd(), "data_GROVER"), type=str, help="The input data dir.")
 parser.add_argument("--model_type", default="roberta", type=str, help="Base model for CoCo")
 parser.add_argument("--model_name_or_path", default="roberta-base", type=str, help="Base model for CoCo with size")
 parser.add_argument("--task_name", default="deepfake", type=str)
-parser.add_argument("--output_dir", default=os.path.join(os.getcwd(), "GPT2_test"), type=str, help="The output directory where the model predictions and checkpoints will be written.")
+parser.add_argument("--output_dir", default=os.path.join(os.getcwd(), "GROVER_test"), type=str, help="The output directory where the model predictions and checkpoints will be written.")
 parser.add_argument("--config_name", default="", type=str, help="Pretrained config name or path if not the same as model_name")
-parser.add_argument("--train_file", default="gpt2_50000_train_coref.jsonl", type=str, help="training file")
-parser.add_argument("--dev_file", default="gpt2_dev_coref.jsonl", type=str, help="training file")
-parser.add_argument("--test_file", default="gpt2_test_coref.jsonl", type=str, help="training file")
+parser.add_argument("--train_file", default="grover_10000_train_coref.jsonl", type=str, help="training file")
+parser.add_argument("--dev_file", default="grover_dev_coref.jsonl", type=str, help="training file")
+parser.add_argument("--test_file", default="grover_test_coref.jsonl", type=str, help="training file")
 parser.add_argument("--tokenizer_name", default="", type=str, help="Pretrained tokenizer name or path if not the same as model_name")
 parser.add_argument("--cache_dir", default="", type=str, help="Where do you want to store the pre-trained models downloaded from s3")
 parser.add_argument("--max_seq_length", default=512, type=int, help="The maximum total input sequence length after tokenization. Sequences longer than this will be truncated, sequences shorter will be padded.")
@@ -780,8 +780,7 @@ def run(conf, data_dir=None):
     # Evaluation (post hoc)
     results = {}
     if args.do_eval and args.local_rank in [-1, 0]:
-        tokenizer = AutoTokenizer.from_pretrained(
-            args.output_dir, do_lower_case=args.do_lower_case)
+        tokenizer = AutoTokenizer.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
         checkpoints = [args.output_dir]
 
         logger.info("Evaluate the following checkpoints: %s", checkpoints)
@@ -817,7 +816,7 @@ def run(conf, data_dir=None):
 
 if __name__ == "__main__":
     data_dir = os.path.abspath(args.data_dir)
-    for seed in [10]:  # Can list any random seeds here
+    for seed in [66]:  # Can list any random seeds here
         config = {
             "seed": seed,
         }
